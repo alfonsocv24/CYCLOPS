@@ -1,7 +1,0 @@
-AALmeVLWWPITGD-pip,head-side,5
-AALmeVLWWPITGD-pip,head-side,6
-AALmeVLWWPITGD-pip,head-side,7
-AALmeVLWWPITGD-pip,head-side,8
-AALmeVLWWPITGD-pip,head-side,11
-
-
