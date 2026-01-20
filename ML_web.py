@@ -81,7 +81,7 @@ seqs = np.array(sequences) # Convert to np.array
 TEST_seq_prop = [] # Container for whole sequence properties
 for idx, seq in enumerate(seqs):
     smi = smi_gen.Seq2Smile(seq, idx_br = idx_br[idx], cyclization = cyclization[idx]) # Create SMI of seq
-    Draw.MolToImageFile(Chem.MolFromSmiles(smi), f'CP{idx+1}.png', size = (500,500), fit_Image = True) # Draw molecule to file
+    Draw.MolToFile(Chem.MolFromSmiles(smi), f'CP{idx+1}.png', size = (500,500), fit_Image = True) # Draw molecule to file
     prop = smi_gen.Seq2Prop(seq, idx_br = idx_br[idx], cyclization = cyclization[idx]) # Get properties
     TEST_seq_prop.append(prop) # Append properties to list of properties
 
@@ -122,7 +122,10 @@ plus_minus = "\u00B1"
 for idx, reg in enumerate(reg_pred):
     st = f'The predicted Permeability for sequence {or_seqs[idx]} is: {reg:.3f} {plus_minus} 0.407'
     reg_str.append(st)
-print(class_str, reg_str)
+for i in range(len(class_str)):
+    line = class_str[i] + " " +reg_str[i]
+    print(line)
+
 
 
 
