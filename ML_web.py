@@ -79,7 +79,10 @@ for idx, seq in enumerate(or_seqs):
 seqs = np.array(sequences) # Convert to np.array
 
 TEST_seq_prop = [] # Container for whole sequence properties
+seq_check = []
 for idx, seq in enumerate(seqs):
+    st_check = CP.check_cyclization(seq, idx_br = idx_br[idx])
+    seq_check.append(st_check)
     smi = smi_gen.Seq2Smile(seq, idx_br = idx_br[idx], cyclization = cyclization[idx]) # Create SMI of seq
     Draw.MolToFile(Chem.MolFromSmiles(smi), f'CP{idx+1}.png', size = (500,500), fit_Image = True) # Draw molecule to file
     prop = smi_gen.Seq2Prop(seq, idx_br = idx_br[idx], cyclization = cyclization[idx]) # Get properties
@@ -112,20 +115,23 @@ class_pred = new_y
 reg_pred = regression.predict(TEST) # Predict Regression
 reg_pred = scaler_reg.inverse_transform(reg_pred.reshape(-1,1))
 reg_pred = reg_pred.reshape((-1,))
+plus_minus = "\u00B1"
+result = []
 class_str = []
 for idx, clas in enumerate(new_y):
-    st = f'The sequence {or_seqs[idx]} presents {clas} with a probability of {prob_y[idx]:.0%}'
-    class_str.append(st)
+    st_class = f'The sequence {or_seqs[idx]} presents {clas} with a probability of {prob_y[idx]:.0%}. '
+    st_reg = f'The predicted Permeability for sequence {or_seqs[idx]} is: {reg_pred[idx]:.3f} {plus_minus} 0.477.'
+    result_str = st_class + st_reg + seq_check[idx]
+    result.append(result_str)
 
-reg_str = []
-plus_minus = "\u00B1"
-for idx, reg in enumerate(reg_pred):
-    st = f'The predicted Permeability for sequence {or_seqs[idx]} is: {reg:.3f} {plus_minus} 0.407'
-    reg_str.append(st)
-for i in range(len(class_str)):
-    line = class_str[i] + " " +reg_str[i]
-    print(line)
+# reg_str = []
 
+# for idx, reg in enumerate(reg_pred):
+#     st = f'The predicted LogP for sequence {or_seqs[idx]} is: {reg:.3f} {plus_minus} 0.407'
+#     reg_str.append(st)
+# print(class_str, reg_str)
+for res in result:
+    print(res)
 
 
 

@@ -151,8 +151,6 @@ class CyclicPeptide:
         if not check_term:
             return lst_seq
         else:
-            if lst_seq[idx_br] not in self.bridge_aas:
-                raise Exception(f'Amino acid {lst_seq[idx_br]} at position {idx_br+1} of sequence {seq} cannot act as branching point. Revise the index of your branching position')
             for term_aa in self.term_aas:
                 if term_aa not in lst_seq:
                     continue
@@ -170,6 +168,44 @@ class CyclicPeptide:
 #                             There aren't any other aas that can act as bridges in the sequence so we can do it this way
 # =============================================================================
                     return new_seq
+        # return permutations
+        
+    def check_cyclization(self, seq, idx_br : int = None, length : int = 15):
+        '''
+        Fragment sequence into amino acids. If branching is detected, the aas
+        forming the branching are put together.
+    
+        Parameters
+        ----------
+        seq : str
+            Peptide sequence we want to fragment.
+        length : int. Optional.
+            Length of the biggest sequence. Default is 15.
+        idx_br : int, optional
+            Position of the amino acid that bounds branching to CP. The default is None.
+
+        Returns
+        -------
+        new_seq : list
+            List of the fragments that form the peptide
+
+        '''
+        _, lst_seq = self.encode([seq], length = length, stop_signal = False)
+        check_term = any(aa in self.term_aas for aa in lst_seq)
+        if not check_term:
+            return ''
+        else:
+            # Case where branching exists
+            idx_br = idx_br - 1 # Equals to python numbering
+            if lst_seq[idx_br] not in self.bridge_aas:
+                # Branching exist and the index is incorrect
+                fail_str1 = ' Caution the output is not a CP because'
+                fail_str2 = f' the amino acid {lst_seq[idx_br]} at position {idx_br+1} of sequence {seq}'
+                fail_str3 = ' cannot act as branching point. Revise the index of'
+                fail_str4 = ' your of branching position'
+                return fail_str1 + fail_str2 + fail_str3 + fail_str4
+            else:
+                return ''
         # return permutations
     
     def cyclic_permutations(self, seq, idx_br : int = None, length : int = 15):
